@@ -4,10 +4,6 @@ version: "1.0.0"
 config-version: 2
 profile: redgrave
 
-# The course pins dbt 1.11. A newer dbt refuses to run this project:
-# that is the "works on my machine" failure shown in the Docker lab.
-require-dbt-version: [">=1.11.0", "<1.12.0"]
-
 model-paths: ["models"]
 test-paths: ["tests"]
 macro-paths: ["macros"]

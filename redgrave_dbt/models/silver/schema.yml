@@ -1,6 +1,6 @@
 version: 2
 
-# TODO (step 6): add the missing tests marked TODO, then run:  dbt test
+# TODO (step 5): add the missing tests marked TODO, then run:  dbt test
 models:
   - name: silver_products
     description: "Clean product catalogue."
@@ -14,14 +14,15 @@ models:
     description: "Clean orders, one row per order."
     columns:
       - name: order_id
-        data_tests: []                      # TODO: order_id must be unique and never null
+        data_tests: [unique, not_null]
       - name: status
         data_tests:
           - accepted_values:
-              arguments:
-                values: ["paid", "refunded"]
+              values: ["paid", "refunded"]
       - name: channel
-        data_tests: []                      # TODO: accepted_values online / megastore / matchday kiosk
+        data_tests:
+          - accepted_values:
+              values: ["online", "megastore", "matchday kiosk"]
 
   - name: silver_order_lines
     description: "Order lines with order and product details."
@@ -30,6 +31,7 @@ models:
         data_tests:
           - not_null
           - relationships:
-              arguments:
-                to: ref('silver_orders')
-                field: order_id
+              to: ref('silver_orders')
+              field: order_id
+      - name: qty
+        data_tests: [not_null]
