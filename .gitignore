@@ -1,0 +1,9 @@
+*.p8
+*.pem
+.env
+.venv/
+venv/
+target/
+logs/
+dbt_packages/
+.DS_Store

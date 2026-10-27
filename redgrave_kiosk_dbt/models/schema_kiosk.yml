@@ -1,0 +1,44 @@
+version: 2
+
+seeds:
+  - name: kiosk_products
+    description: "Reference list of products sold at the kiosks (the source of truth for SKUs)."
+    columns:
+      - name: product_sku
+        data_tests: [unique, not_null]
+
+models:
+  - name: stg_kiosk_sales
+    description: "Every raw row, parsed into typed columns. Not filtered."
+  - name: kiosk_quarantine
+    description: "Rows rejected by a quality rule, with the reason."
+    columns:
+      - name: reject_reason
+        data_tests:
+          - not_null
+          - accepted_values:
+              values: ['missing_sale_id', 'unparseable_timestamp', 'future_timestamp',
+                       'unknown_product', 'invalid_quantity', 'invalid_price']
+  - name: silver_kiosk_sales
+    description: "Valid kiosk sales, one row per sale."
+    columns:
+      - name: sale_id
+        data_tests: []        # TODO (step 6): sale_id must be unique and never null
+      - name: kiosk
+        data_tests:
+          - not_null
+          - accepted_values:
+              values: ['North Stand', 'South Stand', 'East Stand', 'Family Zone']
+      - name: payment
+        data_tests: []        # TODO (step 6): accepted values card, cash, contactless, unknown
+      - name: product_sku
+        data_tests:
+          - relationships:
+              to: ref('kiosk_products')
+              field: product_sku
+      - name: qty
+        data_tests: [not_null]
+  - name: gold_kiosk_data_quality
+    columns:
+      - name: _batch
+        data_tests: [unique, not_null]

@@ -1,0 +1,31 @@
+# AFC Redgrave · matchday kiosk feed · data-quality project (RED-203)
+name: redgrave_kiosk
+version: "1.0.0"
+config-version: 2
+profile: redgrave
+
+model-paths: ["models"]
+test-paths: ["tests"]
+macro-paths: ["macros"]
+seed-paths: ["seeds"]
+target-path: "target"
+clean-targets: ["target", "dbt_packages", "logs"]
+
+models:
+  redgrave_kiosk:
+    +schema: SILVER
+    +materialized: view               # parse / quarantine / silver: always reflect the live feed
+    gold_kiosk_sales_by_stand:
+      +schema: GOLD
+      +materialized: table
+    gold_kiosk_data_quality:
+      +schema: GOLD
+      +materialized: table
+
+seeds:
+  redgrave_kiosk:
+    +schema: SILVER
+
+# After every dbt command, write the results into REDGRAVE.LAB.DBT_RESULTS (instructor check).
+on-run-end:
+  - "{{ log_run_results(results) }}"

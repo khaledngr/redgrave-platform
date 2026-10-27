@@ -1,0 +1,19 @@
+version: 2
+
+# TODO (step 6): add unique + not_null on the key column of each gold model.
+models:
+  - name: gold_revenue_by_channel
+    description: "Paid revenue per channel. Expected total: 21,436 GBP."
+    columns:
+      - name: channel
+        data_tests: []                      # TODO
+  - name: gold_daily_sales
+    description: "Daily orders, refunds and paid revenue."
+    columns:
+      - name: order_date
+        data_tests: []                      # TODO
+  - name: gold_top_products
+    description: "Products ranked by paid revenue."
+    columns:
+      - name: sku
+        data_tests: [unique, not_null]

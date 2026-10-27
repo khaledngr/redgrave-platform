@@ -1,0 +1,14 @@
+version: 2
+
+sources:
+  - name: kiosk
+    database: REDGRAVE
+    schema: BRONZE
+    description: "Live matchday kiosk feed, one JSON document per row, written by kiosk_sales_generator.py."
+    tables:
+      - name: kiosk_sales_raw
+        description: "Raw feed: RAW (VARIANT), _BATCH, _LOADED_AT. Nothing is cleaned here."
+        loaded_at_field: _loaded_at
+        freshness:
+          warn_after: {count: 2, period: minute}
+          error_after: {count: 60, period: minute}

@@ -1,0 +1,13 @@
+product_sku,product_name,category,list_price_gbp
+RDG-SCARF,Nelson Lane bar scarf,merch,15.00
+RDG-BEANIE,Redgrave bobble hat,merch,12.00
+RDG-FLAG,Matchday flag,merch,8.00
+RDG-PROG,Matchday programme,merch,4.00
+RDG-KEYRING,Crest keyring,merch,5.00
+RDG-MUG,1897 heritage mug,merch,9.00
+FOOD-PIE,Steak pie,food,4.50
+FOOD-HOTDOG,Hot dog,food,5.00
+FOOD-CHIPS,Chips,food,3.00
+DRINK-TEA,Tea,drink,2.20
+DRINK-BEER,Pint of lager,drink,5.80
+DRINK-WATER,Still water,drink,2.00
