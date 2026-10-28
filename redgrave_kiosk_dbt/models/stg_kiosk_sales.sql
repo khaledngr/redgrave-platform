@@ -13,7 +13,9 @@ parsed as (
         -- "north stand ", "NORTH-STAND", "N. Stand" -> first letter is enough
         case left(upper(trim(raw:kiosk::string)), 1)
             when 'N' then 'North Stand'
-            -- TODO (step 4.1): add the three other kiosks: South Stand, East Stand, Family Zone
+            when 'S' then 'South Stand'
+            when 'E' then 'East Stand'
+            when 'F' then 'Family Zone'
         end                                                         as kiosk,
 
         -- 3 formats: ISO with offset, "26/10/2026 15:04" (UTC), epoch milliseconds
@@ -22,14 +24,14 @@ parsed as (
                 then to_timestamp_ntz(try_to_number(raw:sold_at::string), 3)
             else coalesce(
                 convert_timezone('UTC', try_to_timestamp_tz(raw:sold_at::string))::timestamp_ntz,
-                try_to_timestamp_ntz(raw:sold_at::string, '____'))   -- TODO (4.2): format of "26/10/2026 15:04"
+                try_to_timestamp_ntz(raw:sold_at::string, 'DD/MM/YYYY HH24:MI'))
         end                                                         as sold_at_utc,
 
         nullif(upper(trim(raw:product_sku::string)), '')            as product_sku,   -- "rdg-mug" -> "RDG-MUG"
         try_to_number(trim(raw:qty::string))                        as qty,           -- "two" -> null, "1 " -> 1
 
         -- schema drift: some tills send unitPrice instead of unit_price
-        coalesce(raw:unit_price, ____)                              as unit_price_raw,   -- TODO (4.3): the drifted field name
+        coalesce(raw:unit_price, raw:unitPrice)                     as unit_price_raw,
         -- "£4.50" -> 4.50, "4,50" -> 4.50
         try_to_decimal(replace(replace(unit_price_raw::string, '£', ''), ',', '.'), 10, 2) as price_number,
         -- nothing at a kiosk costs 100 pounds: 100 or more means the till sent pence (450 -> 4.50)
@@ -38,7 +40,8 @@ parsed as (
         case
             when lower(trim(raw:payment::string)) in ('card', 'cash', 'contactless')
                 then lower(trim(raw:payment::string))
-            -- TODO (4.4): 'apple pay' is a contactless payment: map it
+            when lower(trim(raw:payment::string)) = 'apple pay'
+                then 'contactless'
             else 'unknown'
         end                                                         as payment,
 

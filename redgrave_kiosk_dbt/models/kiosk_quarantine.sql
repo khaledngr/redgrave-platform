@@ -7,8 +7,8 @@ with checked as (
             when s.sale_id is null                                  then 'missing_sale_id'
             when s.sold_at_utc is null                              then 'unparseable_timestamp'
             when s.sold_at_utc > dateadd(minute, 5, sysdate())      then 'future_timestamp'
-            when ____                                               then 'unknown_product'    -- TODO (5.1): sku not found in the catalogue
-            when ____                                               then 'invalid_quantity'   -- TODO (5.1): null, or not between 1 and 20
+            when p.product_sku is null                              then 'unknown_product'
+            when s.qty is null or s.qty not between 1 and 20        then 'invalid_quantity'
             when s.unit_price_gbp is null                           then 'invalid_price'
         end as reject_reason
     from {{ ref('stg_kiosk_sales') }} s

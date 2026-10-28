@@ -23,14 +23,16 @@ models:
     description: "Valid kiosk sales, one row per sale."
     columns:
       - name: sale_id
-        data_tests: []        # TODO (step 6): sale_id must be unique and never null
+        data_tests: [unique, not_null]
       - name: kiosk
         data_tests:
           - not_null
           - accepted_values:
               values: ['North Stand', 'South Stand', 'East Stand', 'Family Zone']
       - name: payment
-        data_tests: []        # TODO (step 6): accepted values card, cash, contactless, unknown
+        data_tests:
+          - accepted_values:
+              values: ['card', 'cash', 'contactless', 'unknown']
       - name: product_sku
         data_tests:
           - relationships:

@@ -22,4 +22,4 @@ where s.sale_id is not null
   and s.qty between 1 and 20
   and s.unit_price_gbp is not null
 -- the till retried after a timeout: same sale sent twice -> keep the first one received
--- TODO (5.2): keep one row per sale_id (the first one received). Hint: qualify row_number() over (...) = 1
+qualify row_number() over (partition by s.sale_id order by s._loaded_at) = 1
