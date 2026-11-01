@@ -18,14 +18,14 @@ jobs:
       TF_VAR_organization_name: ${{ secrets.SF_ORGANIZATION_NAME }}
       TF_VAR_account_name: ${{ secrets.SF_ACCOUNT_NAME }}
       TF_VAR_user: ${{ secrets.SF_USER }}
-      TF_VAR_private_key_path: ${{ runner.temp }}/rsa_key.p8
+      TF_VAR_private_key_path: /tmp/rsa_key.p8
     steps:
       - uses: actions/checkout@v4
       - uses: hashicorp/setup-terraform@v3
         with:
           terraform_version: 1.17.0
       - name: Write the private key from the secret (never echo it)
-        run: printf '%s\n' "${{ secrets.SF_PRIVATE_KEY }}" > "$RUNNER_TEMP/rsa_key.p8"
+        run: printf '%s\n' "${{ secrets.SF_PRIVATE_KEY }}" > /tmp/rsa_key.p8
       - run: terraform fmt -check
       - run: terraform init -input=false
       - run: terraform validate
